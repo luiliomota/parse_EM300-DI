@@ -1,6 +1,7 @@
+//EM300-DI
 const bytesPayload = payload.find(x => x.variable === "payload").value;
-const medicaoRealParaCalculoInicial = 0;
-const medicaoLidaParaCalculoInicial = 0;
+const medicaoRealParaCalculoInicial = 107438;
+const medicaoPulsoParaCalculoInicial = 17573;
 // const intervalo_medicao = device.params.find(x => x.key === "intervalo_medicao").value;
 // const minutos = dayjs().minute();
 
@@ -44,7 +45,6 @@ function milesight(bytes) {
             let byte2 = (bytes[i++] + bytes[i++]);
             let byte1 = (bytes[i++] + bytes[i++]);
             let hex = (byte1 + byte2 + byte3 + byte4);
-            console.log("puslo em hex = "+hex);
             decoded.pulse = parseInt(hex, 16);
         }
     }
@@ -55,6 +55,8 @@ function milesight(bytes) {
 var parse = Decode(bytesPayload);
 
 // if(minutos%intervalo_medicao == 0 || (minutos+1)%intervalo_medicao == 0){
+var hidrometro = ((medicaoRealParaCalculoInicial-medicaoPulsoParaCalculoInicial*0.1) + (parse.pulse / 10)).toFixed(0);
+
 switch (bytesPayload.slice(0, 4)) {
     case '0175':
         payload = ([
@@ -73,11 +75,6 @@ switch (bytesPayload.slice(0, 4)) {
                 'value': parse.humidity,
                 'unit': '%'
             },
-        ]);
-        break;
-    case '05c8':
-        var hidrometro = (12765.2 + (parse.pulse / 10)).toFixed(0);
-        payload = ([
             {
                 'variable': 'pulso',
                 'value': parse.pulse,
@@ -86,8 +83,21 @@ switch (bytesPayload.slice(0, 4)) {
                 'variable': 'hidrometro',
                 'value': hidrometro,
             }
-        ])
+        ]);
         break;
+    // case '05c8':
+    //     var hidrometro = (12765.2 + (parse.pulse / 10)).toFixed(0);
+    //     payload = ([
+    //         {
+    //             'variable': 'pulso',
+    //             'value': parse.pulse,
+    //         },
+    //         {
+    //             'variable': 'hidrometro',
+    //             'value': hidrometro,
+    //         }
+    //     ])
+    //     break;
 }
 // } else {
 //     payload = ([{}]);
