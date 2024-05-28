@@ -1,7 +1,9 @@
 //EM300-DI
 const bytesPayload = payload.find(x => x.variable === "payload").value;
-const medicaoRealParaCalculoInicial = 107438;
-const medicaoPulsoParaCalculoInicial = 17573;
+// const medicaoRealParaCalculoInicial = 108013;
+// const medicaoPulsoParaCalculoInicial = 17951;
+const medicaoPulsoParaCalculoInicial = device.params.find(x => x.key === "medicao_pulso_atual_tago").value;
+const medicaoRealParaCalculoInicial = device.params.find(x => x.key === "medicao_real_hidrometro").value;
 // const intervalo_medicao = device.params.find(x => x.key === "intervalo_medicao").value;
 // const minutos = dayjs().minute();
 
